@@ -7,6 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+typedef NS_ENUM (NSInteger, AASwitchProType){
+    AASwitchProTypeRect=0,
+    AASwitchProTypeRound
+};
 
 @interface AASwitchPro : UIControl<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UIColor *onTintColor;
@@ -17,6 +21,7 @@
 @property (nonatomic, strong) NSString *offText;
 
 @property(nonatomic,getter=isOn) BOOL on;
+@property(nonatomic,assign) AASwitchProType AASwitchProType;
 
 -(instancetype)initWithFrame:(CGRect)frame;
 - (void)setOn:(BOOL)on animated:(BOOL)animated;

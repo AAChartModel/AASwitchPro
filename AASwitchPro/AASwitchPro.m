@@ -7,17 +7,22 @@
 //
 
 #import "AASwitchPro.h"
-static const CGFloat _dotViewWidth = 30-2;
+@interface AASwitchPro()
+- (void)handleTapTapGestureRecognizerEvent:(UITapGestureRecognizer *)recognizer;
+@end
 @implementation AASwitchPro
 {
-    UIView *_view;
+    UIButton *_view;
     UIView *_dotView;
     UIView *_shadowView;
+    CGFloat _dotViewWidth;
+    CGFloat _dotViewCornerRadius;
 }
+
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        [self setUpOriginalStyle];
+         [self setUpOriginalStyle];
     }
     return self;
 }
@@ -35,106 +40,108 @@ static const CGFloat _dotViewWidth = 30-2;
     }
 }
 - (void)setOn:(BOOL)on{
-    [self setOn:on animated:YES];
+    [self setOn:on animated:NO];
 }
 - (void)setOn:(BOOL)on animated:(BOOL)animated{
-    if (_on==on) {
+    if (_on == on) {
         return;
     }
+    
     _on = on;
-
-    if (self.on ==YES) {
-          // 弹簧动画，参数分别为：时长，延时，弹性（越小弹性越大），初始速度
-        [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:0 animations:^{
+     if (on ==YES) {
+        if (animated==YES) {
+            // 弹簧动画，参数分别为：时长，延时，弹性（越小弹性越大），初始速度
+            [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.3 options:0 animations:^{
+                _view.backgroundColor = _onTintColor;
+                _shadowView.frame = CGRectMake(self.frame.size.width-_dotViewWidth-2, 1, _dotViewWidth, _dotViewWidth);
+            } completion:nil];
+        }else{
             _view.backgroundColor = _onTintColor;
-            _shadowView.frame = CGRectMake(self.frame.size.width-_dotViewWidth-1, 1, _dotViewWidth, _dotViewWidth);
-        } completion:nil];
-//        [UIView animateWithDuration:0.2 animations:^{
-//            _view.backgroundColor = _onTintColor;
-//            _shadowView.frame = CGRectMake(self.frame.size.width-_dotViewWidth-1, 1, _dotViewWidth, _dotViewWidth);
-//        }];
-        
+            _shadowView.frame = CGRectMake(self.frame.size.width-_dotViewWidth-2, 1, _dotViewWidth, _dotViewWidth);
+        }
         _view.layer.borderWidth = 0;
     }else{
-        
-        [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.3 options:0 animations:^{
+        if (animated ==YES) {
+            [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.3 options:0 animations:^{
+                _view.backgroundColor = [UIColor whiteColor];
+                _shadowView.frame = CGRectMake(1, 1, _dotViewWidth, _dotViewWidth);
+            } completion:nil];
+        }else{
             _view.backgroundColor = [UIColor whiteColor];
             _shadowView.frame = CGRectMake(1, 1, _dotViewWidth, _dotViewWidth);
-        } completion:nil];
-//        [UIView animateWithDuration:0.2 animations:^{
-//            _view.backgroundColor = [UIColor whiteColor];
-//            _shadowView.frame = CGRectMake(1, 1, _dotViewWidth, _dotViewWidth);
-//        }];
+        }
         _view.layer.borderWidth = 1;
     }
-}
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
+ }
 
--(void)setUpOriginalStyle{
+- (void)setUpOriginalStyle{
+    self.AASwitchProType = AASwitchProTypeRound;
+    
+    _dotViewWidth = self.frame.size.height-4;
+    CGFloat _viewCornerRadius;
+    if (self.AASwitchProType == AASwitchProTypeRect ) {
+        _viewCornerRadius = 3;
+        _dotViewCornerRadius = 3;
+    }else{
+        _viewCornerRadius = self.frame.size.height/2;
+        _dotViewCornerRadius = _dotViewWidth/2;
+    }
     self.backgroundColor = [UIColor whiteColor];
-    _onTintColor = [UIColor greenColor];
+    _onTintColor = [UIColor colorWithRed:0.30f green:0.85f blue:0.39f alpha:1.00f];
 
-    _view = [[UIView alloc]init];
+    _view = [UIButton buttonWithType:UIButtonTypeCustom];
     _view.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-    _view.layer.cornerRadius = 15;
+    _view.layer.cornerRadius = _viewCornerRadius;
     _view.layer.masksToBounds = YES;
     _view.layer.borderWidth = 1;
-    _view.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    _view.layer.borderColor = [[UIColor colorWithRed:0.89f green:0.89f blue:0.91f alpha:1.00f] CGColor];
     _view.backgroundColor = [ UIColor whiteColor];
+    [_view addTarget:self action:@selector(aaSwitchProClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_view];
     
-    CGFloat _dotViewWidth = 30-4;
     _dotView = [[UIView alloc]init];
     _dotView.frame = CGRectMake(1, 1, _dotViewWidth, _dotViewWidth);
-    _dotView.layer.cornerRadius =_dotViewWidth/2;
+    _dotView.layer.cornerRadius =_dotViewCornerRadius;
     _dotView.layer.masksToBounds = YES;
     _dotView.layer.shadowOffset = CGSizeMake(5, 5);
     _dotView.layer.shadowColor = [[UIColor grayColor] CGColor];
     _dotView.backgroundColor = [UIColor whiteColor];
-    
-    _dotView = [[UIView alloc]init];
-    _dotView.frame = CGRectMake(1, 1, _dotViewWidth, _dotViewWidth);
-    _dotView.layer.cornerRadius =_dotViewWidth/2;
-    _dotView.layer.masksToBounds = YES;
-    _dotView.layer.shadowOffset = CGSizeMake(5, 5);
-    _dotView.layer.shadowColor = [[UIColor grayColor] CGColor];
-    _dotView.backgroundColor = [UIColor whiteColor];
-    
     
     _shadowView = [[UIView alloc]initWithFrame:_dotView.frame];
-    
     [self addSubview:_shadowView];
-    
     _shadowView.layer.shadowColor = [UIColor lightGrayColor].CGColor;
-    
     _shadowView.layer.shadowOffset = CGSizeMake(1, 2);
-    
     _shadowView.layer.shadowOpacity = 1;
-    
     _shadowView.layer.shadowRadius = 2;
-    
-    _shadowView.layer.cornerRadius = _dotViewWidth/2;
-    
+    _shadowView.layer.cornerRadius = _dotViewCornerRadius;
     _shadowView.clipsToBounds = NO;
-    
     [_shadowView addSubview:_dotView];
-    
+    [self addGestureRecognizerForWebView];
  
  }
--(void)configureTheGestureRecognizer{
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureRecognizerEvent:)];
-    [_view addGestureRecognizer:tapGesture];
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRecognizerEvent:)];
-    [_view addGestureRecognizer:panGesture];
+
+- (void)aaSwitchProClicked:(UIButton *)sender{
+//    NSLog(@"好像不是每次都触摸到了%d",_on);
+//    if (_on==YES) {
+//        [self setOn:NO animated:YES];
+//     
+//    }else{
+//        [self setOn:YES animated:YES];
+//    }
+
 }
 
-- (void)handleTapGestureRecognizerEvent:(UITapGestureRecognizer *)recognizer{
-    BOOL isOnOrNot = !_on;
-    if (recognizer.state == UIGestureRecognizerStateEnded) {
-        [self setOn:isOnOrNot animated:YES];
-    }
+- (void)addGestureRecognizerForWebView {
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapTapGestureRecognizerEvent:)];
+    [_view addGestureRecognizer:tapGesture];
 }
-- (void)handlePanGestureRecognizerEvent:(UIPanGestureRecognizer *)recognizer{
-    
-}
+
+- (void)handleTapTapGestureRecognizerEvent:(UITapGestureRecognizer *)recognizer{
+    NSLog(@"好像不是每次都触摸到了%d",_on);
+         if (recognizer.state == UIGestureRecognizerStateEnded) {
+            [self setOn:!self.isOn animated:YES];
+        }
+  }
+
 @end
