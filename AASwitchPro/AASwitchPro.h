@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef NS_ENUM (NSInteger, AASwitchProType){
-    AASwitchProTypeRect=0,
-    AASwitchProTypeRound
+
+typedef NS_ENUM (NSInteger, AASwitchProAppearanceType){
+    AASwitchProAppearanceTypeRound=0,
+    AASwitchProAppearanceTypeRect
 };
 
 @interface AASwitchPro : UIControl<UIGestureRecognizerDelegate>
@@ -21,8 +22,9 @@ typedef NS_ENUM (NSInteger, AASwitchProType){
 @property (nonatomic, strong) NSString *offText;
 
 @property(nonatomic,getter=isOn) BOOL on;
-@property(nonatomic,assign) AASwitchProType AASwitchProType;
+@property(nonatomic,assign) AASwitchProAppearanceType appearanceType;
 
 -(instancetype)initWithFrame:(CGRect)frame;
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
+ 
 @end

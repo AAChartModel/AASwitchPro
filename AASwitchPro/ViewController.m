@@ -26,9 +26,9 @@
 
  }
 -(void)setUpView{
-  aaSwitch =[[AASwitchPro alloc]initWithFrame:CGRectMake(100, 100, 80, 30)];
+  aaSwitch =[[AASwitchPro alloc]initWithFrame:CGRectMake(100, 100, 80, 50)];
      [self.view addSubview:aaSwitch];
-// [aaSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+ [aaSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -42,36 +42,29 @@
     
 }
 -(void)switchChanged:(AASwitchPro *)sender{
-    if (aaSwitch.on ==YES) {
-        [aaSwitch setOn:NO animated:YES];
-    }else{
-        [aaSwitch setOn:YES animated:YES];
-        
+    if (sender.on) {
+        NSLog(@"switchPressed ON");
+    } else {
+        NSLog(@"switchPressed OFF");
     }
 }
 
 -(void)buttonClicked:(UIButton *)sender{
     if (aaSwitch.on ==YES) {
-         [aaSwitch setOn:NO animated:YES];
+        [aaSwitch setOn:NO animated:YES];
+        aaSwitch.appearanceType = AASwitchProAppearanceTypeRect;
+        aaSwitch.tintColor = [UIColor redColor];
+        aaSwitch.thumbTintColor = [UIColor blueColor];
     }else{
         [aaSwitch setOn:YES animated:YES];
+        aaSwitch.appearanceType = AASwitchProAppearanceTypeRound;
+        aaSwitch.tintColor = [UIColor blackColor];
+        aaSwitch.thumbTintColor = [UIColor brownColor];
 
-     }
-}
--(void)configureTheGestureRecognizer{
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureRecognizerEvent:)];
-    [aaSwitch addGestureRecognizer:tapGesture];
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGestureRecognizerEvent:)];
-    [aaSwitch addGestureRecognizer:panGesture];
+        
+    }
 }
 
-- (void)handleTapGestureRecognizerEvent:(UITapGestureRecognizer *)recognizer{
- 
-}
-- (void)handlePanGestureRecognizerEvent:(UIPanGestureRecognizer *)recognizer{
-    
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
