@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM (NSInteger, AASwitchProAppearanceType){
-    AASwitchProAppearanceTypeRound=0,
+    AASwitchProAppearanceTypeRound = 0,
     AASwitchProAppearanceTypeRect
 };
 
 @interface AASwitchPro : UIControl<UIGestureRecognizerDelegate>
+
 @property (nonatomic, strong) UIColor *onTintColor;
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, strong) UIColor *thumbTintColor;
@@ -21,10 +22,12 @@ typedef NS_ENUM (NSInteger, AASwitchProAppearanceType){
 @property (nonatomic, strong) NSString *onText;
 @property (nonatomic, strong) NSString *offText;
 
+@property (nonatomic, assign) CGFloat thumbPadding;
+
 @property(nonatomic,getter=isOn) BOOL on;
 @property(nonatomic,assign) AASwitchProAppearanceType appearanceType;
 
--(instancetype)initWithFrame:(CGRect)frame;
+- (instancetype)initWithFrame:(CGRect)frame;
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
  
 @end

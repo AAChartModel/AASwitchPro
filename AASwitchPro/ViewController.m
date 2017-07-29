@@ -26,7 +26,7 @@
 
  }
 -(void)setUpView{
-  aaSwitch =[[AASwitchPro alloc]initWithFrame:CGRectMake(100, 100, 80, 50)];
+  aaSwitch =[[AASwitchPro alloc]initWithFrame:CGRectMake(100, 100, 100, 40)];
      [self.view addSubview:aaSwitch];
  [aaSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     
