@@ -10,9 +10,9 @@
 @interface AASwitchPro()
 @end
 @implementation AASwitchPro{
-    UIView *_view;
+//    UIView *_view;
     UIView *_thumbView;
-    UIView *_shadowView;
+//    UIView *_shadowView;
     CGFloat _thumbViewWidth;
     CGFloat _thumbViewCornerRadius;
 }
@@ -44,14 +44,14 @@
 - (void)setOnTintColor:(UIColor *)onTintColor{
     if (_onTintColor != onTintColor) {
         _onTintColor = onTintColor;
-        _view.backgroundColor = _onTintColor;
+        self.backgroundColor = _onTintColor;
     }
 }
 
 - (void)setTintColor:(UIColor *)tintColor{
     if (_tintColor != tintColor) {
         _tintColor = tintColor;
-        _view.layer.borderColor = [_tintColor CGColor];
+        self.layer.borderColor = [_tintColor CGColor];
      }
 }
 
@@ -75,7 +75,7 @@
             _thumbViewCornerRadius = _thumbViewWidth/2;
         }
         
-        _view.layer.cornerRadius = _viewCornerRadius;
+        self.layer.cornerRadius = _viewCornerRadius;
         _thumbView.layer.cornerRadius = _thumbViewCornerRadius;
     }
 }
@@ -97,29 +97,40 @@
     }
     
     _on = on;
-     if (on ==YES) {
-        if (animated==YES) {
+     if (on == YES) {
+        if (animated == YES) {
             // 弹簧动画，参数分别为：时长，延时，弹性（越小弹性越大），初始速度
-            [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.3 options:0 animations:^{
-                _view.backgroundColor = _onTintColor;
-                _shadowView.frame = CGRectMake(self.frame.size.width-_thumbViewWidth-2, 1, _thumbViewWidth, _thumbViewWidth);
+            [UIView animateWithDuration:0.7
+                                  delay:0
+                 usingSpringWithDamping:0.6
+                  initialSpringVelocity:0.3
+                                options:0
+                             animations:^{
+                self.backgroundColor = _onTintColor;
+                _thumbView.frame = CGRectMake(self.frame.size.width-_thumbViewWidth-2, 1, _thumbViewWidth, _thumbViewWidth);
             } completion:nil];
         }else{
-            _view.backgroundColor = _onTintColor;
-            _shadowView.frame = CGRectMake(self.frame.size.width-_thumbViewWidth-2, 1, _thumbViewWidth, _thumbViewWidth);
+            self.backgroundColor = _onTintColor;
+            _thumbView.frame = CGRectMake(self.frame.size.width-_thumbViewWidth-2, 1, _thumbViewWidth, _thumbViewWidth);
         }
-        _view.layer.borderWidth = 0;
+        self.layer.borderWidth = 0;
     }else{
-        if (animated ==YES) {
-            [UIView animateWithDuration: 0.7 delay:0 usingSpringWithDamping:0.6 initialSpringVelocity:0.3 options:0 animations:^{
-                _view.backgroundColor = [UIColor whiteColor];
-                _shadowView.frame = CGRectMake(1, 1, _thumbViewWidth, _thumbViewWidth);
+        if (animated == YES) {
+            [UIView animateWithDuration:0.7
+                                  delay:0
+                 usingSpringWithDamping:0.6
+                  initialSpringVelocity:0.3
+                                options:0
+                             animations:^{
+                self.backgroundColor = [UIColor whiteColor];
+//                                 _thumbView.frame.origin.x = 1;
+                _thumbView.frame = CGRectMake(1, 1, _thumbViewWidth, _thumbViewWidth);
             } completion:nil];
         }else{
-            _view.backgroundColor = [UIColor whiteColor];
-            _shadowView.frame = CGRectMake(1, 1, _thumbViewWidth, _thumbViewWidth);
+            self.backgroundColor = [UIColor whiteColor];
+            _thumbView.frame = CGRectMake(1, 1, _thumbViewWidth, _thumbViewWidth);
         }
-        _view.layer.borderWidth = 1;
+        self.layer.borderWidth = 1;
     }
     
     [self sendActionsForControlEvents:UIControlEventValueChanged];
@@ -129,36 +140,26 @@
 - (void)setUpOriginalViewAndAppearanceStyle{
     
     _thumbViewWidth = self.frame.size.height-4;
+    _thumbPadding = 1;
    
     self.backgroundColor = [UIColor whiteColor];
     _onTintColor = [UIColor colorWithRed:0.30f green:0.85f blue:0.39f alpha:1.00f];
     _tintColor = [UIColor colorWithRed:0.89f green:0.89f blue:0.91f alpha:1.00f];
-
-    _view = [[UIView alloc]init];
-    _view.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-    _view.layer.cornerRadius = self.frame.size.height/2;
-    _view.layer.masksToBounds = YES;
-    _view.layer.borderWidth = 1;
-    _view.layer.borderColor = [_tintColor CGColor];
-    _view.backgroundColor = [ UIColor whiteColor];
-    [self addSubview:_view];
+    _thumbTintColor = [UIColor whiteColor];
     
     _thumbView = [[UIView alloc]init];
     _thumbView.frame = CGRectMake(1, 1, _thumbViewWidth, _thumbViewWidth);
     _thumbView.layer.cornerRadius =_thumbViewWidth/2;
 //    _thumbView.layer.masksToBounds = YES;
-    _thumbView.layer.shadowOffset = CGSizeMake(5, 5);
-    _thumbView.layer.shadowColor = [[UIColor grayColor] CGColor];
-    _thumbView.backgroundColor = [UIColor whiteColor];
+    _thumbView.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    _thumbView.layer.shadowOffset = CGSizeMake(1, 2);
+    _thumbView.layer.shadowOpacity = 1;
+    _thumbView.layer.shadowRadius = 2;
+    _thumbView.layer.cornerRadius =_thumbViewWidth/2;
+    _thumbView.clipsToBounds = NO;
     
-    _shadowView = [[UIView alloc]initWithFrame:_thumbView.frame];
-    [self addSubview:_shadowView];
-    _shadowView.layer.shadowColor = [UIColor lightGrayColor].CGColor;
-    _shadowView.layer.shadowOffset = CGSizeMake(1, 2);
-    _shadowView.layer.shadowOpacity = 1;
-    _shadowView.layer.shadowRadius = 2;
-    _shadowView.clipsToBounds = NO;
-    [_shadowView addSubview:_thumbView];
+    [self addSubview:_thumbView];
+
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapTapGestureRecognizerEvent:)];
     [self addGestureRecognizer:tapGesture];
  }
